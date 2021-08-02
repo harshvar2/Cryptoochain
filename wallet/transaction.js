@@ -1,5 +1,6 @@
 const ChainUtil=require('../chain-util')
 const {MINING_REWARD}=require('../config')
+const Wallet=require('../wallet/wallet')
 class Transaction{
     constructor(){
         this.id=ChainUtil.id()
@@ -37,6 +38,7 @@ class Transaction{
     }
 
     static signTransaction(transaction,senderWallet){
+       
         transaction.input={
             timestamp:Date.now(),
             amount:senderWallet.balance,

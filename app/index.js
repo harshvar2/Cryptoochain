@@ -6,7 +6,7 @@ const P2pServer=require('./p2p-server')
 const app = express();
 const Wallet = require('../wallet/wallet')
 const TransactionPool = require('../wallet/transaction-pool')
-
+const Miner=require('./miner')
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -17,6 +17,8 @@ const bc = new Blockchain();
 const wallet = new Wallet();
 const tp = new TransactionPool();
 const p2pServer=new P2pServer(bc,tp);
+const miner = new Miner(bc,tp,wallet,p2pServer)
+
 app.get('/blocks', (req, res) => {
 	res.json(bc.chain);
 });
@@ -43,6 +45,12 @@ res.redirect('/transactions');
 })
 app.get('/public-key', (req, res)=>{
 res.json({publicKey:wallet.publicKey})
+})
+
+app.get('/mine-transaction', (req, res)=>{
+  const block=miner.mine()
+  console.log(`New block added:${block.toString()}`)
+  res.redirect('/blocks')
 })
 app.listen(HTTP_PORT, () => console.log(`Listening on port: ${HTTP_PORT}`));
 p2pServer.listen();
