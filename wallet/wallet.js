@@ -1,6 +1,7 @@
 const {INITIAL_BALENCE}=require('../config')
 const ChainUtil=require('../chain-util')
 const Transaction=require('./transaction')
+const Blockchain=require('../blockchain/Blockchain')
 class Wallet{
 
     constructor() {
@@ -17,7 +18,9 @@ class Wallet{
         return this.keyPair.sign(hash)
       }
 
-       createTransaction(reciever, amount, transactionPool) {
+       createTransaction(reciever, amount, blockchain,transactionPool) {
+
+        this.balance=this.calculateBalance(blockchain);
         if (amount > this.balance) {
           console.log(`Amount: ${amount}, exceeds current balance: ${this.balance}`);
           return;
@@ -30,6 +33,36 @@ class Wallet{
         transactionPool.updateOrAddTransaction(transaction);
       }
       return transaction;
+    }
+    calculateBalance(blockchain) {
+    let transactions=[];
+    let balance=this.balance;
+
+    blockchain.chain.forEach(block=>block.data.forEach(transaction=>transactions.push(transaction)))
+    
+    const walletInputs=transactions.filter(transaction=>transaction.input.address===this.publicKey);
+    let startTime=0;
+    if(walletInputs.length>0){
+    const recentInput=walletInputs.reduce(
+      (prev,current)=>prev.input.timestamp>current.input.timestamp?prev:current
+    )
+
+    balance=recentInput.outputs.find(output=>output.address===this.publicKey).amount
+    startTime=recentInput.input.timestamp
+  }
+
+  transactions.forEach(transaction=>{
+    if(transaction.input.timestamp>startTime){
+      transaction.outputs.find(output=>{
+        if(output.address===this.publicKey)
+        balance+=output.balance
+      });
+    }
+  })
+
+    
+
+
     }
     static blockchainWallet(){
       const blockchainWallet=new this();

@@ -1,5 +1,7 @@
 const Wallet = require('./wallet');
 const TransactionPool= require('./transaction-pool');
+const Blockchain= require('../blockchain/blockchain');
+const INITIAL_BALENCE= require('../config')
 
 describe('Wallet',()=>{
     let wallet, tp;
@@ -7,18 +9,19 @@ describe('Wallet',()=>{
   beforeEach(() => {
     wallet = new Wallet();
     tp = new TransactionPool();
+    bc=new Blockchain();
   });
   describe('creating a transaction', () =>{
     let transaction, sendAmount, reciever;
     beforeEach(() => {
         sendAmount = 50;
         reciever = '0xsdsdsrasdsa';
-        transaction = wallet.createTransaction(reciever, sendAmount, tp);
+        transaction = wallet.createTransaction(reciever, sendAmount,bc, tp);
       })
 
       describe(' doing the same transaction with same amount', () => {
         beforeEach(() => {
-          wallet.createTransaction(reciever, sendAmount, tp);
+          wallet.createTransaction(reciever, sendAmount,bc, tp);
         });
 
         it('doubles the `sendAmount` subtracted from the wallet balance', () => {
@@ -34,6 +37,27 @@ describe('Wallet',()=>{
 
 
         })
+
+        // describe('calculating the balence',()=>{
+        //     let addBalance ,repeatAdd,senderWallet;
+        //     beforeEach(() => {
+        //         senderWallet =new Wallet();
+        //         addBalance =100;
+        //         repeatAdd=3
+        //         for(let i=0; i<repeatAdd;i++){
+        //             senderWallet.createTransaction(wallet.publicKey,addBalance,bc,tp)
+        //         }
+        //         bc.addBlock(tp.transactions)
+
+        //     })
+
+        //     // it('calculates the balence for blockchain transactions for reciever', () => {
+        //     //     expect(wallet.calculateBalance(bc)).toEqual(INITIAL_BALENCE+(addBalance*repeatAdd))
+        //     // })
+        //     // it('calculates the balence for blockchain transactions for sender',()=>{
+        //     //     expect(senderWallet.calculateBalance(bc)).toEqual(INITIAL_BALENCE-(addBalance*repeatAdd))
+        //     // })
+        // })
 
 
   })

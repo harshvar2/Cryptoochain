@@ -1,16 +1,17 @@
 const TransactionPool = require('./transaction-pool');
 const Transaction = require('./transaction');
 const Wallet = require('./wallet');
+const Blockchain = require('../blockchain/Blockchain')
 
 describe('TrasactionPool',()=>{
     let tp,wallet,transaction
     beforeEach(() => {
         tp = new TransactionPool();
         wallet = new Wallet();
-       
+       bc=new Blockchain();
         // transaction = Transaction.newTransaction(wallet, '0xnsdsydhgywjkas', 30);
         // tp.updateOrAddTransaction(transaction);
-        transaction = wallet.createTransaction('0xnsdsydhgywjkas', 30, tp);
+        transaction = wallet.createTransaction('0xnsdsydhgywjkas', 30,bc, tp);
       });
 
       it('adds a transaction to the pool', () => {
@@ -31,7 +32,7 @@ describe('TrasactionPool',()=>{
           validTransactions = [...tp.transactions];
           for (let i=0; i<6; i++) {
             wallet = new Wallet();
-            transaction = wallet.createTransaction('0xnsdsydhgywjkas', 30, tp);
+            transaction = wallet.createTransaction('0xnsdsydhgywjkas', 30,bc, tp);
             if (i%2==0) {
               transaction.input.amount = 9999;
             } else {
