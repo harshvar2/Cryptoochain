@@ -9,7 +9,7 @@ static genKeyPair(){
     return ec.genKeyPair();
 }
 static id(){
-    return uuidV1;
+    return uuidV1.v1();
 }
 static hash(data){
     return SHA256(JSON.stringify(data)).toString();
