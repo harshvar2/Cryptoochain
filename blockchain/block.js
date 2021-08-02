@@ -1,4 +1,4 @@
-const SHA256 = require('crypto-js/sha256')
+const ChainUtil=require('../chain-util')
 const {DIFFICULTY,MINE_RATE}=require('../config')
 
 
@@ -45,7 +45,7 @@ static mineBlock(lastBlock, data) {
 }
 
 static hash(timestamp, previousBlockHash, data,nounce,difficulty) {
-    return SHA256(`${timestamp}${previousBlockHash}${data}${nounce}${difficulty}`).toString();
+    return ChainUtil.hash(`${timestamp}${previousBlockHash}${data}${nounce}${difficulty}`).toString();
   }
 
   static blockHash(block) {
