@@ -6,6 +6,7 @@ const peers=process.env.PEERS?process.env.PEERS.split(','):[];
 const MESSAGE_TYPES = {
   chain: 'CHAIN',
   transaction: 'TRANSACTION',
+  clear_transactions: 'CLEAR_TRANSACTIONS',
  };
 
 
@@ -56,6 +57,9 @@ messageHandler(socket) {
       case MESSAGE_TYPES.transaction:
         this.transactionPool.updateOrAddTransaction(data.transaction);
         break;
+        case MESSAGE_TYPES.clear_transactions:
+          this.transactionPool.clear();
+          break;
     }
 
   })
@@ -73,6 +77,10 @@ broadcastTransaction(transaction){
 }
 sendTransaction(socket,transaction){
   socket.send(JSON.stringify({type:MESSAGE_TYPES.transaction,transaction}))
+}
+broadcastClearTransaction(){
+  this.sockets.forEach(socket => socket.send(JSON.stringify({type:MESSAGE_TYPE.clear_transactions})));
+
 }
 
 }

@@ -1,6 +1,6 @@
 const Transaction=require('./transaction')
 const Wallet=require('./wallet')
-
+const {MINING_REWARD}=require('../config')
 describe('Transaction', ()=>{
     let transaction,wallet,reciever,amount;
     beforeEach(()=>{
@@ -28,7 +28,14 @@ describe('Transaction', ()=>{
         expect(Transaction.verifyTransaction(transaction)).toBe(false)
     })
 
-
+    // describe('transaction reward creation',()=>{
+    //     beforeEach(()=>{
+    //         transaction=Transaction.rewardTransaction(wallet,Wallet.blockchainWallet())
+    //     })
+    //     it(`reward the minerWallet`,()=>{
+    //         expect(transaction.outputs.find(output=> output.address===.publicKey).amount).toEqual(MINING_REWARD)
+    //     })
+    // })
 
     describe('transaction exceeds wallet balence',()=>{
         beforeEach(() =>{
@@ -60,6 +67,8 @@ describe('Transaction', ()=>{
               .toEqual(newAmount);
           });
     })
+
+  
 })
 
 

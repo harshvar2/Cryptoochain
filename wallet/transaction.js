@@ -1,4 +1,5 @@
 const ChainUtil=require('../chain-util')
+const {MINING_REWARD}=require('../config')
 class Transaction{
     constructor(){
         this.id=ChainUtil.id()
@@ -26,13 +27,13 @@ class Transaction{
             console.log(`Amount:${amount} exceeds balance`)
             return;
         }
-        transaction.outputs.push(...[
-            {amount:senderWallet.balance-amount,address:senderWallet.publicKey},
-            {amount,address:reciever}
-        ])
-
-        Transaction.signTransaction(transaction, senderWallet);
-        return transaction;
+        
+        return Transaction.transactionWithOutputs(senderWallet,[{amount:senderWallet.balance-amount,address:senderWallet.publicKey},
+            {amount,address:reciever}])
+       
+    }
+    static rewardTransaction(minerWallet,blockchainWallet){
+        return Transaction.transactionWithOutputs(blockchainWallet,[{amount:MINING_REWARD,address:minerWallet.address}])
     }
 
     static signTransaction(transaction,senderWallet){
@@ -48,6 +49,12 @@ class Transaction{
 return ChainUtil.verifySignature(transaction.input.address,transaction.input.signature,ChainUtil.hash(transaction.outputs))
     }
 
+    static transactionWithOutputs(senderWallet,outputs){
+        const transaction=new this()
+        transaction.outputs.push(...outputs);
+        Transaction.signTransaction(transaction,senderWallet)
+        return transaction;
+    }
     
 }
 module.exports = Transaction
