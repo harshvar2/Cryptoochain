@@ -54,13 +54,15 @@ class Wallet{
   transactions.forEach(transaction=>{
     if(transaction.input.timestamp>startTime){
       transaction.outputs.find(output=>{
-        if(output.address===this.publicKey)
-        balance+=output.balance
+        if(output.address===this.publicKey){
+          balance+=output.amount
+        }
+        
       });
     }
   })
 
-    
+    return balance
 
 
     }

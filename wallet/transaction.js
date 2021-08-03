@@ -34,7 +34,7 @@ class Transaction{
        
     }
     static rewardTransaction(minerWallet,blockchainWallet){
-        return Transaction.transactionWithOutputs(blockchainWallet,[{amount:MINING_REWARD,address:minerWallet.address}])
+        return Transaction.transactionWithOutputs(blockchainWallet,[{amount:MINING_REWARD,address:minerWallet.publicKey}])
     }
 
     static signTransaction(transaction,senderWallet){
