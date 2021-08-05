@@ -1,4 +1,5 @@
 const Transaction = require('./transaction');
+const {MINING_REWARD}=require('../config')
 
 
 class TransactionPool{
@@ -7,6 +8,7 @@ class TransactionPool{
     }
 
     updateOrAddTransaction(transaction){
+        if(transaction!=undefined){
         let transactionWithId = this.transactions.find(t => t.id === transaction.id);
         //add or update transaction if not in pool
         if (transactionWithId) {
@@ -14,7 +16,7 @@ class TransactionPool{
           } else {
             this.transactions.push(transaction);
           }
-         
+        }
     }
 
      existingTransaction(address){
@@ -25,8 +27,9 @@ class TransactionPool{
             const outputTotal = transaction.outputs.reduce((total,output)=>{
                 return total+output.amount;
             },0)
-            if(transaction.input.amount!==outputTotal){
+            if(transaction.input.amount!==outputTotal+MINING_REWARD){
                 console.log(`Invalid transaction from ${transaction.input.address}.`)
+                return;
             }
             if (!Transaction.verifyTransaction(transaction)) {
                 console.log(`Invalid signature from ${transaction.input.address}.`)

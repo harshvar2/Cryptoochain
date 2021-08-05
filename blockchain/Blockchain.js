@@ -20,7 +20,7 @@ class Blockchain{
             const lastBlock = chain[i-1];
             if (
               block.previousBlockHash !== lastBlock.hash ||
-              block.hash !== Block.blockHash(block)
+              block.hash !== Block.blockHash(block) //To check if the block data has not been changed
             ) {
               return false;
             }

@@ -1,13 +1,16 @@
 const ChainUtil=require('../chain-util')
 const {MINING_REWARD}=require('../config')
-// const Wallet=require('../wallet/wallet')
+const Wallet=require('../wallet/wallet')
+walletBalance=0;
 class Transaction{
     constructor(){
         this.id=ChainUtil.id()
         this.input=null;
         this.outputs=[];
+        
     }
-
+     
+//To handle the addition of new output objects to an existing transaction
     update(senderWallet,reciver,amount){
         const senderOutput=this.outputs.find(output=>output.address===senderWallet.publicKey);
         if(amount>senderOutput.amount){
@@ -23,18 +26,21 @@ class Transaction{
 
     static newTransaction(senderWallet,reciever,amount){
 
-        const transaction=new this();
+        
         if(amount>senderWallet.balance){
             console.log(`Amount:${amount} exceeds balance`)
             return;
         }
-        
-        return Transaction.transactionWithOutputs(senderWallet,[{amount:senderWallet.balance-amount,address:senderWallet.publicKey},
+        this.walletBalance=senderWallet.balance-amount-MINING_REWARD
+        return Transaction.transactionWithOutputs(senderWallet,[{amount:senderWallet.balance-amount-MINING_REWARD,address:senderWallet.publicKey},
             {amount,address:reciever}])
        
     }
+    static getWalletBalence(){
+        return this.walletBalance
+    }
     static rewardTransaction(minerWallet,blockchainWallet){
-        return Transaction.transactionWithOutputs(blockchainWallet,[{amount:MINING_REWARD,address:minerWallet.publicKey}])
+        return Transaction.transactionWithOutputs(blockchainWallet,[{amount:MINING_REWARD,type:"rewardTransaction",address:minerWallet.publicKey}])
     }
 
     static signTransaction(transaction,senderWallet){
@@ -43,7 +49,8 @@ class Transaction{
             timestamp:Date.now(),
             amount:senderWallet.balance,
             address:senderWallet.publicKey,
-            signature:senderWallet.sign(ChainUtil.hash(transaction.outputs))
+            signature:senderWallet.sign(ChainUtil.hash(transaction.outputs)),
+            transactionFees:MINING_REWARD
         };
     }
 

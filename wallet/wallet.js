@@ -1,7 +1,11 @@
-const {INITIAL_BALENCE}=require('../config')
+const {INITIAL_BALENCE,LIQUIDITY_POOL_BALENCE}=require('../config')
 const ChainUtil=require('../chain-util')
 const Transaction=require('./transaction')
 const Blockchain=require('../blockchain/Blockchain')
+
+
+
+ 
 class Wallet{
 
     constructor() {
@@ -42,6 +46,7 @@ class Wallet{
     
     const walletInputs=transactions.filter(transaction=>transaction.input.address===this.publicKey);
     let startTime=0;
+    //get the latest transaction 
     if(walletInputs.length>0){
     const recentInput=walletInputs.reduce(
       (prev,current)=>prev.input.timestamp>current.input.timestamp?prev:current
@@ -66,9 +71,11 @@ class Wallet{
 
 
     }
+    
     static blockchainWallet(){
-      const blockchainWallet=new this();
-      blockchainWallet.address = "blockchain-wallet"
+      let blockchainWallet=new this();
+      blockchainWallet.publicKey = "blockchain-wallet-address/ Liquidity Pool address "
+      blockchainWallet.balance=LIQUIDITY_POOL_BALENCE
       return blockchainWallet;
     }
 }

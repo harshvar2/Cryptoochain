@@ -11,7 +11,7 @@ describe('Transaction', ()=>{
 
     })
     it('Check if the output `amount` matches the amount subtracted from wallet balence',()=>{
-        expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount).toEqual(wallet.balance-amount)
+        expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount).toEqual(wallet.balance-amount-MINING_REWARD)
     })
     it('output matches the `amount` added to the reciever wallet',()=>{
         expect(transaction.outputs.find(output =>output.address === reciever).amount).toEqual(amount)
@@ -60,7 +60,7 @@ describe('Transaction', ()=>{
         })
 
         it('reduces the newAmount from the sender output',()=>{
-            expect(transaction.outputs.find(output=> output.address===wallet.publicKey).amount).toEqual(wallet.balance-amount-newAmount)
+            expect(transaction.outputs.find(output=> output.address===wallet.publicKey).amount).toEqual(wallet.balance-amount-newAmount-MINING_REWARD)
         })
         it('outputs an amount for the next reciever', () => {
             expect(transaction.outputs.find(output => output.address === newReciever).amount)

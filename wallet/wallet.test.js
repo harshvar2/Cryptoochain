@@ -1,7 +1,7 @@
 const Wallet = require('./wallet');
 const TransactionPool= require('./transaction-pool');
 const Blockchain= require('../blockchain/blockchain');
-const {INITIAL_BALENCE}= require('../config')
+const {INITIAL_BALENCE,MINING_REWARD}= require('../config')
 
 describe('Wallet',()=>{
     let wallet, tp,bc;
@@ -26,7 +26,7 @@ describe('Wallet',()=>{
 
         it('doubles the `sendAmount` subtracted from the wallet balance', () => {
             expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
-        .toEqual(wallet.balance - sendAmount*2);
+        .toEqual((wallet.balance - sendAmount*2)-MINING_REWARD);
         })
 
         it('user repeats the same transaction with same amount', () => {
@@ -52,10 +52,10 @@ describe('Wallet',()=>{
             })
 
             it('calculates the balence for blockchain transactions for reciever', () => {
-                expect(wallet.calculateBalance(bc)+50).toEqual(INITIAL_BALENCE+(addBalance*repeatAdd))
+                expect(wallet.calculateBalance(bc)+50).toEqual(INITIAL_BALENCE+(addBalance*repeatAdd)-MINING_REWARD)
             })
             it('calculates the balence for blockchain transactions for sender',()=>{
-                expect(senderWallet.calculateBalance(bc)).toEqual(INITIAL_BALENCE-(addBalance*repeatAdd))
+                expect((senderWallet.calculateBalance(bc))).toEqual(INITIAL_BALENCE-(addBalance*repeatAdd)-MINING_REWARD)
             })
 
             describe('and the recipient conducts a transaction', () => {
@@ -77,7 +77,7 @@ describe('Wallet',()=>{
                 });
         
                 it('calculate the recipient balance only using transactions since its most recent one', () => {
-                  expect(wallet.calculateBalance(bc)).toEqual(recipientBalance - subtractBalance + addBalance);
+                  expect((wallet.calculateBalance(bc)+MINING_REWARD)).toEqual(recipientBalance - subtractBalance + addBalance);
                 });
               });
             });

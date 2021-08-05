@@ -24,7 +24,7 @@ toString() {
   }
 
  static genesis() {
-    return new this('Genesis time', '-----', 'f1r57-h45h', [],0,DIFFICULTY);
+    return new this('Genesis time', '00000000000000000000', '0xasdjjdqwe12328197sadas', [],0,DIFFICULTY);
   }
 
 static mineBlock(lastBlock, data) {

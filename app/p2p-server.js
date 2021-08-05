@@ -10,12 +10,16 @@ const MESSAGE_TYPES = {
  };
 
 
+
+
 class P2pServer{
 constructor(blockchain,transactionPool){
     
     this.blockchain=blockchain;
     this.sockets=[];
     this.transactionPool=transactionPool;
+   
+    
 
 }
 //Starting the server
