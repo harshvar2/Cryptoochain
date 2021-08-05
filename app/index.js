@@ -6,7 +6,9 @@ const P2pServer=require('./p2p-server')
 const app = express();
 const Wallet = require('../wallet/wallet')
 const TransactionPool = require('../wallet/transaction-pool')
+const Transaction = require('../wallet/transaction')
 const Miner=require('./miner')
+
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -23,16 +25,16 @@ app.get('/blocks', (req, res) => {
 	res.json(bc.chain);
 });
 
-app.post('/mine', (req, res) => {
-    const block = bc.addBlock(req.body.data);
+// app.post('/mine', (req, res) => {
+//     const block = bc.addBlock(req.body.data);
     
-    console.log(`New block added: ${block.toString()}`);
+//     console.log(`New block added: ${block.toString()}`);
 
-    p2pServer.syncChains();
-    res.redirect('/blocks');
-  });
+//     p2pServer.syncChains();
+//     res.redirect('/blocks');
+//   });
 
-app.get('/transactions', (req, res)=>{
+app.get('/mempool', (req, res)=>{
   res.json(tp.transactions)
 })
 
@@ -40,11 +42,15 @@ app.post('/transact', (req, res) => {
 const {reciever,amount}=req.body;
 const transaction = wallet.createTransaction(reciever,amount,bc,tp)
 p2pServer.broadcastTransaction(transaction);
-res.redirect('/transactions');
+res.redirect('/mempool');
 
 })
 app.get('/public-key', (req, res)=>{
-res.json({publicKey:wallet.publicKey})
+  // const balance=Transaction.getWalletBalence()
+  const walletbalance =wallet.calculateBalance(bc)
+  // if(walletbalance>balance)
+  // balence=walletbalance;
+res.json({WalletAddress:wallet.publicKey,privateKey:wallet.privateKey,balance:walletbalance});
 })
 
 app.get('/mine-transaction', (req, res)=>{
