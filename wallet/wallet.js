@@ -1,4 +1,4 @@
-const {INITIAL_BALENCE,LIQUIDITY_POOL_BALENCE}=require('../config')
+const {INITIAL_BALENCE,LIQUIDITY_POOL_BALENCE,MINING_REWARD}=require('../config')
 const ChainUtil=require('../chain-util')
 const Transaction=require('./transaction')
 const Blockchain=require('../blockchain/Blockchain')
@@ -74,8 +74,8 @@ class Wallet{
     
     static blockchainWallet(){
       let blockchainWallet=new this();
-      blockchainWallet.publicKey = "blockchain-wallet-address/ Liquidity Pool address "
-      blockchainWallet.balance=LIQUIDITY_POOL_BALENCE
+      blockchainWallet.publicKey = "COINBASE (Newly Generated Coins)"
+      blockchainWallet.balance=MINING_REWARD
       return blockchainWallet;
     }
 }

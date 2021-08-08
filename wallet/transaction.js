@@ -40,17 +40,15 @@ class Transaction{
         return this.walletBalance
     }
     static rewardTransaction(minerWallet,blockchainWallet){
-        return Transaction.transactionWithOutputs(blockchainWallet,[{amount:MINING_REWARD,type:"rewardTransaction",address:minerWallet.publicKey}])
+        return Transaction.transactionWithOutputs(blockchainWallet,[{amount:MINING_REWARD,address:minerWallet.publicKey}])
     }
 
     static signTransaction(transaction,senderWallet){
        
         transaction.input={
             timestamp:Date.now(),
-            amount:senderWallet.balance,
             address:senderWallet.publicKey,
             signature:senderWallet.sign(ChainUtil.hash(transaction.outputs)),
-            transactionFees:MINING_REWARD
         };
     }
 

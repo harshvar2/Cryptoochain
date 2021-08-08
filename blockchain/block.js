@@ -1,9 +1,10 @@
 const ChainUtil=require('../chain-util')
 const {DIFFICULTY,MINE_RATE}=require('../config')
 
-
+BLOCK_HEIGHT=0
 class Block{
     constructor(timestamp,previousBlockHash,hash,data,nounce,difficulty){
+      this.block_height= BLOCK_HEIGHT++;
         this.timestamp = timestamp;
         this.previousBlockHash= previousBlockHash
         this.hash = hash;
